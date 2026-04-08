@@ -1,0 +1,11 @@
+[
+  {
+    "_id": 1,
+    "_nome": "Joao Paulo",
+    "_telefone": "123456789",
+    "_endereco": "Rua da FATEC",
+    "_usuario": "admin",
+    "_senha": "123",
+    "_nivelPermissao": "ADMINISTRADOR"
+  }
+]
