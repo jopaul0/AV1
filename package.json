@@ -1,0 +1,28 @@
+{
+  "name": "aerocode",
+  "version": "1.0.0",
+  "description": "Sistema **command-line interface (CLI)** desenvolvido em TypeScript",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jopaul0/AV1.git"
+  },
+  "author": "João Paulo",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jopaul0/AV1/issues"
+  },
+  "homepage": "https://github.com/jopaul0/AV1#readme",
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  }
+}
