@@ -15,7 +15,7 @@
   },
   "author": "João Paulo",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/jopaul0/AV1/issues"
   },
