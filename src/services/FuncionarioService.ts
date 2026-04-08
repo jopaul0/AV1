@@ -9,9 +9,14 @@ export class FuncionarioService {
         this.carregarDados();
     }
 
-    public cadastrar(funcionario: Funcionario): void {
+    public cadastrar(funcionario: Funcionario): boolean {
+        if (this.buscarPorId(funcionario.id)) {
+            console.log("❌ Erro: ID de funcionário já existe!");
+            return false;
+        }
         this._funcionarios.push(funcionario);
         this.salvarDados();
+        return true;
     }
 
     public login(usuario: string, senha: string): Funcionario | null {
@@ -32,7 +37,7 @@ export class FuncionarioService {
 
     private carregarDados(): void {
         const dados = Persistencia.carregar(this.FILE_NAME);
-        this._funcionarios = dados.map((f: any) => 
+        this._funcionarios = dados.map((f: any) =>
             new Funcionario(f._id, f._nome, f._telefone, f._endereco, f._usuario, f._senha, f._nivelPermissao)
         );
     }

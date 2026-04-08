@@ -52,6 +52,12 @@ export class AeronaveService {
                 });
             }
 
+            if (a._testes) {
+                a._testes.forEach((t: any) => {
+                    aero.adicionarTeste(new Teste(t._tipo, t._resultado));
+                });
+            }
+            
             return aero;
         });
     }

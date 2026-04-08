@@ -6,7 +6,7 @@ export class Relatorio {
         private _aeronave: Aeronave,
         private _cliente: string,
         private _dataEntrega: string
-    ) {}
+    ) { }
 
     get aeronave(): Aeronave { return this._aeronave; }
     set aeronave(value: Aeronave) { this._aeronave = value; }
@@ -22,9 +22,18 @@ export class Relatorio {
         rel += `=======================================\n`;
         rel += `CLIENTE: ${this._cliente}\n`;
         rel += `DATA DE ENTREGA: ${this._dataEntrega}\n`;
-        rel += `AERONAVE: ${this._aeronave.modelo} (${this._aeronave.codigo})\n`;
-        rel += `PEÇAS INSTALADAS: ${this._aeronave.pecas.length}\n`;
-        rel += `STATUS FINAL: ENTREGUE\n`;
+        rel += `AERONAVE: ${this._aeronave.modelo} (${this._aeronave.codigo})\n\n`;
+
+        rel += `--- COMPONENTES ---\n`;
+        this._aeronave.pecas.forEach(p => rel += `- ${p.nome} (${p.tipo}) - Status: ${p.status}\n`);
+
+        rel += `\n--- ETAPAS DE PRODUÇÃO ---\n`;
+        this._aeronave.etapas.forEach(e => rel += `- ${e.nome}: ${e.status}\n`);
+
+        rel += `\n--- TESTES REALIZADOS ---\n`;
+        this._aeronave.testes.forEach(t => rel += `- ${t.tipo}: ${t.resultado}\n`);
+
+        rel += `\nSTATUS FINAL: ENTREGUE\n`;
         return rel;
     }
 

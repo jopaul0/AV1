@@ -12,6 +12,8 @@ import { Aeronave } from './models/Aeronave';
 import { TipoTeste } from './enums/TipoTeste';
 import { Teste } from './models/Teste';
 import { ResultadoTeste } from './enums/ResultadoTeste';
+import { TipoPeca } from './enums/TipoPeca';
+import { Peca } from './models/Peca';
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -58,6 +60,7 @@ async function menuPrincipal() {
     console.log("2. Gestão de Produção (Peças/Etapas)");
     console.log("3. Testes e Qualidade");
     console.log("4. Relatórios e Finalização");
+    console.log("5. Gestão de Usuários");
     console.log("0. Sair");
 
     const opcao = await question("Escolha uma opção: ");
@@ -67,8 +70,9 @@ async function menuPrincipal() {
         case "2": await menuProducao(); break;
         case "3": await menuTestes(); break;
         case "4": await menuRelatorios(); break;
+        case "5": await menuGerenciarUsuarios(); break;
         case "0": process.exit(0);
-        default: 
+        default:
             console.log("Opção inválida!");
             await menuPrincipal();
     }
@@ -90,9 +94,11 @@ async function menuAeronaves() {
         const cod = await question("Código: ");
         const mod = await question("Modelo: ");
         const tipoInput = await question("Tipo (1-Comercial, 2-Militar): ");
+        const cap = parseInt(await question("Capacidade: "));
+        const alc = parseInt(await question("Alcance (km): "));
         const tipo = tipoInput === "1" ? TipoAeronave.COMERCIAL : TipoAeronave.MILITAR;
-        
-        const novaAero = new Aeronave(cod, mod, tipo, 150, 5000);
+
+        const novaAero = new Aeronave(cod, mod, tipo, cap, alc);
         if (aeronaveService.cadastrar(novaAero)) {
             console.log("✅ Aeronave cadastrada!");
         }
@@ -113,16 +119,30 @@ async function menuProducao() {
     }
 
     console.log("1. Adicionar Peça");
-    console.log("2. Concluir Etapa");
+    console.log("2. Iniciar Etapa");
+    console.log("3. Concluir Etapa");
     const opcao = await question("Opção: ");
 
-    if (opcao === "2") {
-        console.log("\nEtapas atuais:");
+    if (opcao === "1") {
+        const nome = await question("Nome da Peça: ");
+        const tipo = (await question("Tipo (1-Nacional, 2-Importada): ")) === "1" ? TipoPeca.NACIONAL : TipoPeca.IMPORTADA;
+        const forn = await question("Fornecedor: ");
+        pecaService.adicionarPeca(cod, new Peca(nome, tipo, forn));
+        console.log("✅ Peça adicionada!");
+    }
+    else if (opcao === "2" || opcao === "3") {
         aero.etapas.forEach((e, i) => console.log(`${i} - ${e.nome} [${e.status}]`));
-        const index = parseInt(await question("Índice da etapa para concluir: "));
-        
-        if (etapaService.concluirEtapa(cod, index)) {
-            console.log("✅ Etapa atualizada com sucesso!");
+        const index = parseInt(await question("Índice da etapa: "));
+
+        if (opcao === "2") {
+            if (aero.etapas[index]?.iniciar()) {
+                aeronaveService.salvarDados();
+                console.log("✅ Etapa iniciada (ANDAMENTO)!");
+            }
+        } else {
+            if (etapaService.concluirEtapa(cod, index)) {
+                console.log("✅ Etapa concluída!");
+            }
         }
     }
     await menuPrincipal();
@@ -153,12 +173,12 @@ async function menuTestes() {
     if (tipo) {
         const resInput = await question("Resultado (1-Aprovado, 2-Reprovado): ");
         const resultado = resInput === "1" ? ResultadoTeste.APROVADO : ResultadoTeste.REPROVADO;
-        
+
         const novoTeste = new Teste(tipo, resultado);
         testeService.registrarTeste(cod, novoTeste);
         console.log("✅ Teste registrado com sucesso!");
     }
-    
+
     await menuPrincipal();
 }
 
@@ -178,7 +198,7 @@ async function menuRelatorios() {
     const data = await question("Data de Entrega (DD/MM/AAAA): ");
 
     const confirmar = await question(`Deseja gerar o relatório final para ${cliente}? (s/n): `);
-    
+
     if (confirmar.toLowerCase() === 's') {
         relatorioService.emitirRelatorio(cod, cliente, data);
         console.log("\x1b[32m✅ Processo concluído! O arquivo foi gerado na pasta 'data'.\x1b[0m");
@@ -187,5 +207,40 @@ async function menuRelatorios() {
     await menuPrincipal();
 }
 
+async function menuGerenciarUsuarios() {
+    if (usuarioLogado?.nivelPermissao !== NivelPermissao.ADMINISTRADOR) {
+        console.log("\x1b[31m⛔ Acesso Negado: Apenas Administradores podem gerenciar usuários.\x1b[0m");
+        return menuPrincipal();
+    }
+
+    console.log("\n--- GESTÃO DE USUÁRIOS ---");
+    console.log("1. Cadastrar Novo Funcionário");
+    console.log("2. Voltar");
+
+    const opcao = await question("Escolha uma opção: ");
+
+    if (opcao === "1") {
+        const id = parseInt(await question("ID (Número único): "));
+        const nome = await question("Nome Completo: ");
+        const tel = await question("Telefone: ");
+        const end = await question("Endereço: ");
+        const user = await question("Nome de Usuário (Login): ");
+        const senha = await question("Senha: ");
+        
+        console.log("Níveis: 1-Administrador, 2-Engenheiro, 3-Operador");
+        const nivelInput = await question("Escolha o nível: ");
+        
+        let nivel = NivelPermissao.OPERADOR;
+        if (nivelInput === "1") nivel = NivelPermissao.ADMINISTRADOR;
+        else if (nivelInput === "2") nivel = NivelPermissao.ENGENHEIRO;
+
+        const novoFunc = new Funcionario(id, nome, tel, end, user, senha, nivel);
+        
+        funcionarioService.cadastrar(novoFunc);
+        console.log("\x1b[32m✅ Funcionário cadastrado com sucesso!\x1b[0m");
+    }
+
+    await menuPrincipal();
+}
 
 iniciarSistema();
