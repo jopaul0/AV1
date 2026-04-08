@@ -1,0 +1,7 @@
+AEROCODE - RELATÓRIO FINAL DE PRODUÇÃO
+=======================================
+CLIENTE: Cliente Teste
+DATA DE ENTREGA: 08/04/2026
+AERONAVE: Boeing Teste (TEST-777)
+PEÇAS INSTALADAS: 1
+STATUS FINAL: ENTREGUE

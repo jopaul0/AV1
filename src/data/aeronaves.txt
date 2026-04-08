@@ -1,0 +1,32 @@
+[
+  {
+    "_codigo": "TEST-777",
+    "_modelo": "Boeing Teste",
+    "_tipo": "COMERCIAL",
+    "_capacidade": 100,
+    "_alcance": 2000,
+    "_pecas": [
+      {
+        "_nome": "Asa Esquerda",
+        "_tipo": "NACIONAL",
+        "_fornecedor": "Embraer",
+        "_status": "EM_PRODUCAO"
+      }
+    ],
+    "_etapas": [
+      {
+        "_nome": "Montagem Estrutural",
+        "_prazo": "5 dias",
+        "_status": "CONCLUIDA",
+        "_funcionarios": []
+      },
+      {
+        "_nome": "Pintura",
+        "_prazo": "2 dias",
+        "_status": "PENDENTE",
+        "_funcionarios": []
+      }
+    ],
+    "_testes": []
+  }
+]
