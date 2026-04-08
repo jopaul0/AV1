@@ -8,7 +8,7 @@ export class Etapa {
         private _nome: string,
         private _prazo: string,
         private _status: StatusEtapa = StatusEtapa.PENDENTE
-    ) {}
+    ) { }
 
     get nome(): string { return this._nome; }
     set nome(value: string) { this._nome = value; }
@@ -29,8 +29,12 @@ export class Etapa {
         return false;
     }
 
-    public finalizar(): void {
-        this._status = StatusEtapa.CONCLUIDA;
+    public finalizar(): boolean {
+        if (this._status === StatusEtapa.ANDAMENTO) {
+            this._status = StatusEtapa.CONCLUIDA;
+            return true;
+        }
+        return false;
     }
 
     public associarFuncionario(funcionario: Funcionario): void {
