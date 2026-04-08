@@ -42,4 +42,16 @@ export class Aeronave {
         console.log(`Peças: ${this._pecas.length} | Testes: ${this._testes.length}`);
         console.log(`-------------------------------------------`);
     }
+
+    public adicionarPeca(peca: Peca): void {
+        this._pecas.push(peca);
+    }
+
+    public adicionarEtapa(etapa: Etapa): void {
+        this._etapas.push(etapa);
+    }
+
+    public adicionarTeste(teste: Teste): void {
+        this._testes.push(teste);
+    }
 }
