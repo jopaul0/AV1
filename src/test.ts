@@ -34,7 +34,7 @@ async function rodarTestes() {
     assert(loginSucesso !== null, "Login com administrador padrão");
 
     // --- TESTE 2: Cadastro de Aeronave ---
-    const codTeste = "TEST-777";
+    const codTeste = `TEST-${Date.now()}`;
     const novaAero = new Aeronave(codTeste, "Boeing Teste", TipoAeronave.COMERCIAL, 100, 2000);
     const cadastrou = aeroService.cadastrar(novaAero);
     assert(cadastrou === true, "Cadastro de nova aeronave");
